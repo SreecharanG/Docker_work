@@ -1,0 +1,37 @@
+version: '3.1'
+# NOTE: move this answer file up a directory so it'll work
+
+services:
+
+  drupal:
+    image: drupal:8.2
+    ports:
+      - "8080:80"
+    volumes:
+      - drupal-modules:/var/www/html/modules
+      - drupal-profiles:/var/www/html/profiles       
+      - drupal-sites:/var/www/html/sites      
+      - drupal-themes:/var/www/html/themes
+ 
+  postgres:
+    image: postgres:12.1
+    environment:
+      - POSTGRES_PASSWORD_FILE=my_secret_pass
+    volumes:
+      - drupal-data:/var/lib/postgresql/data
+    secrets:
+      - my_secret_pass
+      - my_secret_user
+
+secrets:
+  my_secret_pass:
+   file: ./my_pass.txt
+  my_secret_user:
+   external: true 
+
+volumes:
+  drupal-data:
+  drupal-modules:
+  drupal-profiles:
+  drupal-sites:
+  drupal-themes:
